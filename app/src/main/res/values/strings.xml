@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">Translator</string>
+
+    <string name="translator">Translator</string>
+    <string name="translate">Translate</string>
+    <string name="placeholder">Placeholder text</string>
+
+    <string name="no_connection">No internet connection! Cannot be translated!</string>
+
+    <string name="lesser_sign"> &lt; </string>
+    <string name="greater_sign"> &gt; </string>
+
+    <string name="speak">Speak</string>
+    <string name="translate_button">Translate</string>
+    <string name="save">Save</string>
+    <string name="read_button">Read</string>
+    <string name="copy_button">Copy</string>
+
+    <string name="input_text">Tap Speak or type in your text</string>
+    <string name="output_text">Translated text will show up here</string>
+
+    <string name="no_saved_translations">You have no saved translations.</string>
+
+    <string name="home_page_description">Translate what you say or type and get to know people around you!</string>
+    <string name="read_instructions"><u>Read instructions</u></string>
+    <string name="my_translations">My translations</string>
+    <string name="instructions">Instructions</string>
+
+    <string name="choose_language_instruction">Chose the language you wish to translate from and to.</string>
+    <string name="text_input_instruction">Input text with your keyoboard of use “text-to-speach” option and get text to translate.</string>
+    <string name="translation_output_instruction">Translate and you’ll see your output below written. You can also have it read outloud.</string>
+    <string name="save_copy_instruction">You can copy your translation or save it and you can access it anytime in My Translations page.</string>
+
+    <string name="are_you_sure_you_want_to_delete_this_translation">Are you sure you want to delete this translation?</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+
+</resources>

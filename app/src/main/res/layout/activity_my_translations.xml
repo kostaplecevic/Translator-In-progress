@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    tools:context=".MyTranslations">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/headerPart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/backArrow"
+            android:layout_width="14dp"
+            android:layout_height="32dp"
+            app:layout_constraintEnd_toStartOf="@id/myTranslations"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/lesser_sign"
+            android:onClick="backArrow"
+            android:textAppearance="@style/header_arrow_style" />
+
+        <TextView
+            android:id="@+id/myTranslations"
+            android:layout_width="261dp"
+            android:layout_height="55dp"
+            android:layout_marginStart="8dp"
+            android:text="@string/my_translations"
+            android:textAppearance="@style/translator"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/backArrow"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginVertical="20dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerPart">
+
+        <ListView
+            android:id="@+id/myTranslationList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="20dp"
+            android:scrollbars="none"/>
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/optionalText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/no_saved_translations"
+        android:fontFamily="@font/nunito_small"
+        android:textFontWeight="600"
+        android:textSize="22dp"
+        android:lineHeight="32.5dp"
+        app:layout_constraintTop_toBottomOf="@id/headerPart"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
