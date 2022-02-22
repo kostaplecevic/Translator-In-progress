@@ -1,11 +1,13 @@
 package com.example.translator;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -26,6 +28,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -35,6 +38,7 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.translate.Translate;
@@ -86,6 +90,8 @@ public class TranslationPage extends AppCompatActivity {
 
     private ArrayList<LanguageItem> mCountryList = new ArrayList<>();
     private LanguageAdapter mAdapter;
+
+    private int line_starter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -257,85 +263,106 @@ public class TranslationPage extends AppCompatActivity {
         String[] arr = translatedText.split("\\W+");
         int brojLoopova = arr.length;
 
-        final RelativeLayout rLayout1 = findViewById(R.id.relLay);
+        ConstraintLayout rLayout1 = findViewById(R.id.relLay);
+        rLayout1.removeAllViews();
         int screenWidth = rLayout1.getWidth();
+        ConstraintSet constraintSet = new ConstraintSet();
 
-        RelativeLayout relativeLayout2 = findViewById(R.id.relLay2);
+        DatabaseManager helper = new DatabaseManager(this);
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        //RelativeLayout relativeLayout2 = findViewById(R.id.relLay2);
 
         int numberOfTextViews = 1;
         TextView[] textViewArray = new TextView[brojLoopova + 2];
+        textViewArray[0] = new TextView(this);
 
-        rLayout1.removeAllViews();
         int currWidth = 0;
         boolean isNewLine = false;
         boolean firstLine = true;
         boolean lineCounter = true;
         int o = 0;
         int width = 0;
+        int line_start_id = 1;
+        boolean matching = false;
 
         for (int i = 0; i < brojLoopova; i++) {
-            RelativeLayout.LayoutParams lparams = new RelativeLayout.LayoutParams
-                    (ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             TextView text = new TextView(this);
             text.setPadding(0,4,7,0);
+
+            Cursor cursor_question = db.query("WORDS", new String[]{"TRANSLATED_WORD", "TRANSLATED_LANG"},null,null,null,null,null);
+
+            while(cursor_question.moveToNext()) {
+                String database_word = cursor_question.getString(0);
+                String database_lang = cursor_question.getString(1);
+                if(database_lang.equals(translateLanguage) && database_word.equals(arr[i])){
+                    matching = true;
+                    System.out.println("OVDE JE IZVLACENJE RECI IZ BAZE I SETOVANJE TRUE AKO JESTE MATCHING");
+                }
+            }
+
             text.setText(arr[i]);
-            System.out.println(arr[i] + " OVDE PISE TEKST");
             text.setId(numberOfTextViews);
+            if(matching){
+                // ALSO MAKE IT BOLD
+                text.setTextColor(Color.parseColor("#00cc00"));
+                System.out.println("SETOVANJE BOJE");
+                matching = false;
+            }
+            ConstraintLayout.LayoutParams textParams = new ConstraintLayout.LayoutParams
+                    (ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
+            text.setLayoutParams(textParams);
             text.setOnClickListener(myListener);
+            rLayout1.addView(text,0);
+            constraintSet.clone(rLayout1);
 
             if(numberOfTextViews>=2){
-                textViewArray[numberOfTextViews].measure(0,0);
-                width = textViewArray[numberOfTextViews].getMeasuredWidth();
+                textViewArray[numberOfTextViews-1].measure(0,0);
+                width = textViewArray[numberOfTextViews-1].getMeasuredWidth();
             }
 
-            if((currWidth)<=screenWidth){
-                currWidth += width + 10;
-                isNewLine = false;
+            if(currWidth + 10<=screenWidth){
+                currWidth += width + 15;
             }
             else{
-                currWidth = currWidth + width;
                 firstLine = false;
                 isNewLine = true;
+                line_starter++;
+                lineCounter = true;
+                currWidth = 0;
             }
 
             if (o==0){
-                lparams.addRule(RelativeLayout.ALIGN_START);
-                text.setLayoutParams(lparams);
-                text.setId(numberOfTextViews);
-                rLayout1.addView(text);
-                numberOfTextViews = numberOfTextViews + 1;
+                line_start_id = numberOfTextViews;
+                constraintSet.connect(text.getId(), ConstraintSet.START, rLayout1.getId(), ConstraintSet.START,0);
+                constraintSet.applyTo(rLayout1);
+
                 textViewArray[numberOfTextViews] = text;
+                numberOfTextViews = numberOfTextViews + 1;
             }
             else if(isNewLine){
                 if(lineCounter){
-                    lparams.addRule(RelativeLayout.BELOW, 1);
+                    constraintSet.connect(text.getId(), ConstraintSet.TOP, textViewArray[line_start_id].getId(), ConstraintSet.BOTTOM,0);
+                    constraintSet.connect(text.getId(), ConstraintSet.START, rLayout1.getId(), ConstraintSet.START,0);
+                    constraintSet.applyTo(rLayout1);
                     lineCounter = false;
+                    line_start_id = numberOfTextViews;
                 }else{
-                    lparams.addRule(RelativeLayout.RIGHT_OF, numberOfTextViews-1);
-                    lparams.addRule(RelativeLayout.BELOW, 2000);
+                    constraintSet.connect(text.getId(), ConstraintSet.START, textViewArray[numberOfTextViews-1].getId(), ConstraintSet.END,0);
+                    constraintSet.connect(text.getId(), ConstraintSet.TOP, textViewArray[numberOfTextViews-1].getId(), ConstraintSet.TOP,0);
+                    constraintSet.applyTo(rLayout1);
                 }
-                text.setLayoutParams(lparams);
-                text.setId(numberOfTextViews);
-                relativeLayout2.addView(text);
-                numberOfTextViews = numberOfTextViews + 1;
+
                 textViewArray[numberOfTextViews] = text;
+                numberOfTextViews = numberOfTextViews + 1;
             }
             else if(firstLine){
-                lparams.addRule(RelativeLayout.RIGHT_OF, numberOfTextViews-1);
-                text.setLayoutParams(lparams);
-                text.setId(numberOfTextViews);
-                rLayout1.addView(text);
-                numberOfTextViews = numberOfTextViews + 1;
-                textViewArray[numberOfTextViews] = text;
-            }
-//            else{
-//                lparams.addRule(RelativeLayout.RIGHT_OF, 2000 - 1 + o);
-//                lparams.addRule(RelativeLayout.BELOW, 2000 - currCounter + o);
-//                text.setLayoutParams(lparams);
-//                text.setId(numberOfTextViews);
-//                rLayout1.addView(text);
-//            }
+                constraintSet.connect(text.getId(), ConstraintSet.START, textViewArray[numberOfTextViews-1].getId(), ConstraintSet.END,0);
+                constraintSet.applyTo(rLayout1);
 
+                textViewArray[numberOfTextViews] = text;
+                numberOfTextViews = numberOfTextViews + 1;
+            }
             o++;
         }
     }
@@ -347,10 +374,73 @@ public class TranslationPage extends AppCompatActivity {
             System.out.println("ID TEXTAAAA" + idTexta);
             TextView tv = findViewById(idTexta);
             String message = tv.getText().toString();
+            addNewWord(view);
             Toast.makeText(TranslationPage.this,
                     message, Toast.LENGTH_LONG).show();
         }
     };
+
+    private void addNewWordDataBase(SQLiteDatabase sqLiteDatabase, int id){
+        ContentValues cv = new ContentValues();
+        String id_string = String.valueOf(id);
+        sqLiteDatabase.delete("TRANSLATION","id=?",new String[]{id_string});
+    }
+
+    public void addNewWord(View view) {
+        DatabaseManager helper = new DatabaseManager(this);
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        System.out.println("PISI AKO UDJES");
+
+        int idTexta = view.getId();
+        TextView tv = findViewById(idTexta);
+        String message = tv.getText().toString();
+
+        System.out.println(message);
+
+        // inflate the layout of the popup window
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.pop_up_add_word, null);
+
+        // create the popup window
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        boolean focusable = true; // lets taps outside the popup also dismiss it
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+
+        // which view you pass in doesn't matter, it is only used for the window tolken
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+
+        Button confirm = (Button) popupView.findViewById(R.id.confirm_popup_word);
+        confirm.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseManager.insertWord(db,message,translateLanguage);
+
+                Cursor cursor_word = db.query("WORDS", new String[]{"TRANSLATED_WORD","TRANSLATED_LANG"},null,null,null,null,null);
+
+                while(cursor_word.moveToNext()) {
+                    String trans_word = cursor_word.getString(0);
+                    String trans_lang = cursor_word.getString(1);
+
+                    System.out.println(trans_word + " i " + trans_lang);
+                }
+
+                    //addNewWordDataBase(db, translation_id);
+                popupWindow.dismiss();
+                db.close();
+            }
+        });
+
+        Button cancel = (Button) popupView.findViewById(R.id.cancel_popup_word);
+        cancel.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                db.close();
+            }
+        });
+    }
 
 
     public boolean checkInternetConnection() {
@@ -396,9 +486,7 @@ public class TranslationPage extends AppCompatActivity {
     }
 
     public void readTranslatedText(View view) {
-        textViewSetup("Bio sam tamo i onda sam video nju upoznao sam je u skoli i mrzeo sam je najvise na svetu" +
-                " jer je bila uzasna osoba i niko nije gori");
-        translatedText = "bio sam tamo";
+        textViewSetup("Bio sam kuci pa sam otisao u skolu");
         //String toSpeak = translatedEditText.getText().toString();
         String toSpeak = translatedText;
         Toast.makeText(getApplicationContext(), toSpeak,Toast.LENGTH_SHORT).show();
@@ -411,9 +499,9 @@ public class TranslationPage extends AppCompatActivity {
         SQLiteDatabase db = helper.getWritableDatabase();
         String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
         EditText editText = findViewById(R.id.originalText);
-        EditText editText2 = findViewById(R.id.translatedText);
+        //EditText editText2 = findViewById(R.id.translatedText);
         String string1 = editText.getText().toString();
-        String string2 = editText2.getText().toString();
+        String string2 = translatedText;
 
         System.out.println(date);
 

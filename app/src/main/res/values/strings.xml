@@ -34,5 +34,6 @@
     <string name="are_you_sure_you_want_to_delete_this_translation">Are you sure you want to delete this translation?</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
+    <string name="new_word_prompt">Are you sure you want to add this word to your words?</string>
 
 </resources>

@@ -187,20 +187,20 @@
         tools:layout_editor_absoluteX="20dp"
         tools:layout_editor_absoluteY="20dp">
 
-        <RelativeLayout
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/relLay"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:layout_constraintHorizontal_weight=".2"
             app:layout_constraintTop_toTopOf="@id/outputTextPart">
-        </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/relLay2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintHorizontal_weight=".2"
-            app:layout_constraintTop_toBottomOf="@id/relLay">
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
