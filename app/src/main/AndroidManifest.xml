@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -16,12 +17,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Translator">
-        <activity android:name=".TestActivity">
+        <activity android:name=".SavedWords">
 
         </activity>
-        <activity android:name=".TranslationPage">
-
-        </activity>
+        <activity android:name=".TranslationPage" />
         <activity android:name=".MyTranslations" />
         <activity android:name=".InstructionsPage" />
         <activity android:name=".HomePage">
@@ -31,9 +30,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
+        <receiver android:name=".NotificationReceiver" />
 
-        </activity>
+
     </application>
 
 </manifest>

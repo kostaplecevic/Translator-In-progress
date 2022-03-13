@@ -415,7 +415,8 @@ public class TranslationPage extends AppCompatActivity {
         confirm.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseManager.insertWord(db,message,translateLanguage);
+                @SuppressLint("SimpleDateFormat") String date = new SimpleDateFormat("dd-mm-yyyy").format(new Date());
+                DatabaseManager.insertWord(db,message,translateLanguage,date);
 
                 Cursor cursor_word = db.query("WORDS", new String[]{"TRANSLATED_WORD","TRANSLATED_LANG"},null,null,null,null,null);
 

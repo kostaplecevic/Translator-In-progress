@@ -24,7 +24,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if(oldVersion<1){
             sqLiteDatabase.execSQL("CREATE TABLE TRANSLATION(ID INTEGER PRIMARY KEY AUTOINCREMENT, " + "DATE TEXT NOT NULL, " + "ORIGINAL_TEXT TEXT NOT NULL, " + "TRANSLATED_TEXT TEXT NOT NULL);");
             sqLiteDatabase.execSQL("CREATE TABLE LANGUAGES(ID INTEGER PRIMARY KEY AUTOINCREMENT, " + "LANG_TAG TEXT NOT NULL, " + "LANG_NAME TEXT NOT NULL, " + "IMAGE_RESOURCE_ID INT);");
-            sqLiteDatabase.execSQL("CREATE TABLE WORDS(ID INTEGER PRIMARY KEY AUTOINCREMENT, " +  "TRANSLATED_WORD TEXT NOT NULL, " +  "TRANSLATED_LANG TEXT NOT NULL);");
+            sqLiteDatabase.execSQL("CREATE TABLE WORDS(ID INTEGER PRIMARY KEY AUTOINCREMENT, " + "DATE TEXT NOT NULL, " + "TRANSLATED_WORD TEXT NOT NULL, " +  "TRANSLATED_LANG TEXT NOT NULL);");
             insertLanguage(sqLiteDatabase,"en", "English", R.drawable.flag_uk);
             insertLanguage(sqLiteDatabase,"sr", "Serbian", R.drawable.flag_serbia);
             insertLanguage(sqLiteDatabase,"es", "Spanish", R.drawable.flag_spain);
@@ -56,10 +56,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
         translationValues.put("TRANSLATED_TEXT", translated_text);
         sqLiteDatabase.insert("TRANSLATION", null, translationValues);
     }
-    public static void insertWord(SQLiteDatabase sqLiteDatabase,String translated_word, String translated_language){
+    public static void insertWord(SQLiteDatabase sqLiteDatabase,String translated_word, String translated_language, String date){
         ContentValues wordValues = new ContentValues();
         wordValues.put("TRANSLATED_WORD", translated_word);
         wordValues.put("TRANSLATED_LANG", translated_language);
+        wordValues.put("DATE", date);
         sqLiteDatabase.insert("WORDS", null, wordValues);
     }
 

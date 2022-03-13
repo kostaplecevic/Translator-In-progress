@@ -28,12 +28,13 @@
 
     <string name="choose_language_instruction">Chose the language you wish to translate from and to.</string>
     <string name="text_input_instruction">Input text with your keyoboard of use “text-to-speach” option and get text to translate.</string>
-    <string name="translation_output_instruction">Translate and you’ll see your output below written. You can also have it read outloud.</string>
+    <string name="translation_output_instruction">Translate and you’ll see your output written bellow. You can also have it read outloud.</string>
     <string name="save_copy_instruction">You can copy your translation or save it and you can access it anytime in My Translations page.</string>
 
     <string name="are_you_sure_you_want_to_delete_this_translation">Are you sure you want to delete this translation?</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
     <string name="new_word_prompt">Are you sure you want to add this word to your words?</string>
+    <string name="my_saved_words">My Saved Words</string>
 
 </resources>

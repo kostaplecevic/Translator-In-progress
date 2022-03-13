@@ -79,6 +79,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <TextView
+        android:id="@+id/savedWords"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="@string/my_saved_words"
+        android:fontFamily="@font/nunito_small"
+        android:textFontWeight="600"
+        android:textSize="18sp"
+        android:lineHeight="32.74dp"
+        style="@style/read_instructions"
+        android:textAlignment="center"
+        android:onClick="goToSavedWords"
+        app:layout_constraintTop_toBottomOf="@id/readInstructions"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/homePageButtons"
         android:layout_width="match_parent"
